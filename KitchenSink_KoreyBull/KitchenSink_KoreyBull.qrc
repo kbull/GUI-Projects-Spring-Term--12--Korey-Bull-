@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>toolboxIcon.png</file>
+        <file>introStyle.qss</file>
+        <file>html/intro.html</file>
+        <file>jimmy.jpg</file>
+    </qresource>
+</RCC>
