@@ -15,7 +15,7 @@
 
 
 FileReader::FileReader(QObject *parent) :
-    QObject(parent), m_xmlSrc("input_files/KitchenSinkData.xml")
+    QObject(parent), m_xmlSrc(":/KitchenSinkData.xml")
 {
 
 }
@@ -35,7 +35,7 @@ QString FileReader::getXmlSrc() const
 
 bool FileReader::readFromXml()
 {
-    QMutexLocker lock(&m_mutex);
+    //QMutexLocker lock(&m_mutex);
     QFile xmlFile(m_xmlSrc);
     QXmlStreamReader * reader = new QXmlStreamReader(&xmlFile);
     QXmlStreamAttributes tokenAttributes;

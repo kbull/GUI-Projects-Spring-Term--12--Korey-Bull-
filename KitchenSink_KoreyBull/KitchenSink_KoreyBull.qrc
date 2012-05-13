@@ -5,5 +5,6 @@
         <file>jimmy.jpg</file>
         <file>widgetStyle.qss</file>
         <file>input_files/KitchenSinkData.xml</file>
+        <file>dbg_stub_output.txt</file>
     </qresource>
 </RCC>

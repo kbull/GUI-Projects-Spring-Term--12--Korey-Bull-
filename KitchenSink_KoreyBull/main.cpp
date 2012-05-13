@@ -26,7 +26,6 @@
 //#include "kitchensink.h"
 #include "sinkmodel.h"
 #include "filereader.h"
-#include <QDebug>
 #include <QFile>
 
 
@@ -42,28 +41,27 @@ int main(int argc, char *argv[])
 
 //    w.show();
     FileReader * reader = new FileReader;
-    SinkModel * model = &(SinkModel::getInstance());
 
-    QApplication::connect(reader, SIGNAL(storeArtistNames(QMap<Artists,QString>)), model, SLOT(initArtistNames(QMap<Artists,QString>)));
-    QApplication::connect(reader, SIGNAL(storePageTexts(QMap<Tabs,QString>)), model, SLOT(initPageTexts(QMap<Tabs,QString>)));
-    QApplication::connect(reader, SIGNAL(storeSongTypes(QMap<SongType,QString>)), model, SLOT(initSongTypes(QMap<SongType,QString>)));
-    QApplication::connect(reader, SIGNAL(storeStyleSheets(QMap<Tabs,QString>)), model, SLOT(initStyleSheets(QMap<Tabs,QString>)));
-    QApplication::connect(reader, SIGNAL(storeSuggestionList(QStringList)), model, SLOT(initSuggestionList(QStringList)));
-    QApplication::connect(reader, SIGNAL(storeTabLabels(QMap<Tabs,QString>)), model, SLOT(initTabLabels(QMap<Tabs,QString>)));
+    QApplication::connect(reader, SIGNAL(storeArtistNames(QMap<Artists,QString>)), &(SinkModel::getInstance()), SLOT(initArtistNames(QMap<Artists,QString>)));
+    QApplication::connect(reader, SIGNAL(storePageTexts(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initPageTexts(QMap<Tabs,QString>)));
+    QApplication::connect(reader, SIGNAL(storeSongTypes(QMap<SongType,QString>)), &(SinkModel::getInstance()), SLOT(initSongTypes(QMap<SongType,QString>)));
+    QApplication::connect(reader, SIGNAL(storeStyleSheets(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initStyleSheets(QMap<Tabs,QString>)));
+    QApplication::connect(reader, SIGNAL(storeSuggestionList(QStringList)), &(SinkModel::getInstance()), SLOT(initSuggestionList(QStringList)));
+    QApplication::connect(reader, SIGNAL(storeTabLabels(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initTabLabels(QMap<Tabs,QString>)));
 
 
     reader->readFromXml();
 
 
-    QMap<Artists, QString> artists = model->getArtists();
-    QMap<Tabs, QString> texts = model->getPageTexts();
-    QMap<SongType, QString> types = model->getSongTypes();
-    QMap<Tabs, QString> labels = model->getTabLabels();
-    QStringList suggestions = model->getSuggestionList();
+    QMap<Artists, QString> artists = (SinkModel::getInstance()).getArtists();
+    QMap<Tabs, QString> texts = (SinkModel::getInstance()).getPageTexts();
+    QMap<SongType, QString> types = (SinkModel::getInstance()).getSongTypes();
+    QMap<Tabs, QString> labels = (SinkModel::getInstance()).getTabLabels();
+    QStringList suggestions = (SinkModel::getInstance()).getSuggestionList();
 
-    QFile * file = new QFile("dbg_stub_output.txt");
+    QFile * file = new QFile(":/dbg_stub_output.txt");
 
-    if (file->open(QIODevice::ReadWrite))
+    if (file->open(QIODevice::WriteOnly))
     {
         file->resize(0);
 
@@ -130,8 +128,6 @@ int main(int argc, char *argv[])
 
         delete file;
         file = 0;
-
-
 
     }
     

@@ -64,7 +64,8 @@ OTHER_FILES += \
     toolboxIcon.png \
     widgetStyle.qss \
     jimmy.jpg \
-    input_files/KitchenSinkData.xml
+    input_files/KitchenSinkData.xml \
+    dbg_stub_output.txt
 
 RESOURCES += \
     KitchenSink_KoreyBull.qrc
