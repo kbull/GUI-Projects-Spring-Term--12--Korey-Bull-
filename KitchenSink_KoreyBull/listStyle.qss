@@ -1,0 +1,13 @@
+QTabWidget::pane { /* the tab widget frame */
+    border-top: 2px solid #C2C7CB;
+    position: absolute;
+}
+
+QTabWidget::tab-bar {
+    left: 91px; /* move to the right by 91px */
+}
+
+QTabBar::tab {
+    background: #2A8EBF;
+    padding: 2px;
+}

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>toolboxIcon.png</file>
+        <file>introStyle.qss</file>
+        <file>jimmy.jpg</file>
+        <file>widgetStyle.qss</file>
+        <file>input_files/KitchenSinkData.xml</file>
+    </qresource>
+</RCC>

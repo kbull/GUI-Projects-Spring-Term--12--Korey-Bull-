@@ -11,8 +11,60 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        kitchensink.cpp
+        kitchensink.cpp \
+    tabpage.cpp \
+    intropage.cpp \
+    multiton.cpp \
+    tabbuilder.cpp \
+    buildstrategy.cpp \
+    introstrategy.cpp \
+    pagebuilder.cpp \
+    widgetstrategy.cpp \
+    widgetpage.cpp \
+    panelstrategy.cpp \
+    panelpage.cpp \
+    popuppage.cpp \
+    popupstrategy.cpp \
+    textpage.cpp \
+    textstrategy.cpp \
+    listpage.cpp \
+    liststrategy.cpp \
+    popdialog.cpp \
+    sinkmodel.cpp \
+    filereader.cpp
 
-HEADERS  += kitchensink.h
+HEADERS  += kitchensink.h \
+    tabpage.h \
+    intropage.h \
+    multiton.h \
+    tabbuilder.h \
+    buildstrategy.h \
+    introstrategy.h \
+    Enumerations.h \
+    pagebuilder.h \
+    widgetstrategy.h \
+    widgetpage.h \
+    panelstrategy.h \
+    panelpage.h \
+    popuppage.h \
+    popupstrategy.h \
+    textpage.h \
+    textstrategy.h \
+    listpage.h \
+    liststrategy.h \
+    popdialog.h \
+    sinkmodel.h \
+    filereader.h
 
-FORMS    += kitchensink.ui
+FORMS    += kitchensink.ui \
+    popdialog.ui
+
+OTHER_FILES += \
+    introStyle.qss \
+    toolboxIcon.png \
+    widgetStyle.qss \
+    jimmy.jpg \
+    input_files/KitchenSinkData.xml
+
+RESOURCES += \
+    KitchenSink_KoreyBull.qrc

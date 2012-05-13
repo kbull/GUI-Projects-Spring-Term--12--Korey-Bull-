@@ -1,0 +1,51 @@
+QMenu::item
+{
+    text-align: left;
+    font-style: oblique;
+}
+
+QMenu::item
+{
+    text-align: left;
+    font-style: italic;
+}
+
+QMenu::item[text="Apple"]
+{
+    text-align: left;
+    color: red;
+    font-style: oblique;
+}
+
+QMenu::item[text="Banana"]
+{
+    text-align: left;
+    color: yellow;
+    font-style: oblique;
+}
+
+QMenu::item[text="Coconut"]
+{
+    text-align: left;
+    color: white;
+    font-style: oblique;
+}
+
+QMenu::item[text="Donut"]
+{
+    text-align: left;
+    color: brown;
+    font-style: oblique;
+}
+
+QMenu::item[text="Underlined"]
+{
+    text-align: left;
+    text-decoration: underline;
+}
+
+QMenu::item[text="Strikethrough"]
+{
+    text-align: left;
+    text-decoration: line-through;
+}
