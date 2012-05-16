@@ -149,9 +149,10 @@ void KitchenSink::popupRequested()
     QMessageBox box;
 
     box.setText("Click anywhere outside this popup to make it disappear.");
-
+    box.setWindowModality(Qt::WindowModal);
     box.setStandardButtons(QMessageBox::NoButton);
     box.setWindowFlags(Qt::Popup | Qt::Widget);
+    box.setAttribute(Qt::WA_ShowWithoutActivating);
     box.setBaseSize(128, 48);
 
     box.exec();
