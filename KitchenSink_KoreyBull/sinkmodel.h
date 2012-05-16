@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QVector>
 #include <QStringList>
 #include <QMessageBox>
 #include "Enumerations.h"
@@ -50,7 +51,7 @@ public:
     QMap<Tabs, QString> getPageTexts();
 
     QStringList getSongs(Artists artist, SongType type);
-    QMap<Artists, QMap<SongType, QStringList>> getSongSet( );
+    QMap<SongType, QStringList> getArtistWorks(Artists artist);
 
 signals:
 
@@ -61,7 +62,7 @@ public slots:
     void initArtistNames(QMap<Artists, QString>);
     void initSongTypes(QMap<SongType, QString>);
     void initPageTexts(QMap<Tabs, QString>);
-    void initSongSet(QMap<Artists, QMap<SongType, QStringList>>);
+    void initSongSet(QMap<SongType, QStringList> *, Artists key);
 
 
 private:
@@ -80,7 +81,7 @@ private:
     QMap<Artists, QString> m_artists;
     QMap<SongType, QString> m_songTypes;
     QMap<Tabs, QString> m_pageText;
-    QMap<Artists, QMap<SongType, QStringList>> m_songSet;
+    QMap<SongType,QStringList> ** m_songSet;
 
 };
 

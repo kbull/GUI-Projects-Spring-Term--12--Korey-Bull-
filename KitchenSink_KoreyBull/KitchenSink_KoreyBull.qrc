@@ -4,7 +4,12 @@
         <file>introStyle.qss</file>
         <file>jimmy.jpg</file>
         <file>widgetStyle.qss</file>
-        <file>input_files/KitchenSinkData.xml</file>
-        <file>dbg_stub_output.txt</file>
+        <file>html/intro.html</file>
+        <file>html/list.html</file>
+        <file>html/panel.html</file>
+        <file>html/popup.html</file>
+        <file>html/text.html</file>
+        <file>html/widget.html</file>
+        <file>input_files/inputStrs.txt</file>
     </qresource>
 </RCC>

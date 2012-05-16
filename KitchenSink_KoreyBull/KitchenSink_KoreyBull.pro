@@ -14,7 +14,6 @@ SOURCES += main.cpp\
         kitchensink.cpp \
     tabpage.cpp \
     intropage.cpp \
-    multiton.cpp \
     tabbuilder.cpp \
     buildstrategy.cpp \
     introstrategy.cpp \
@@ -64,8 +63,13 @@ OTHER_FILES += \
     toolboxIcon.png \
     widgetStyle.qss \
     jimmy.jpg \
-    input_files/KitchenSinkData.xml \
-    dbg_stub_output.txt
+    html/widget.html \
+    html/text.html \
+    html/popup.html \
+    html/panel.html \
+    html/list.html \
+    html/intro.html \
+    input_files/inputStrs.txt
 
 RESOURCES += \
     KitchenSink_KoreyBull.qrc

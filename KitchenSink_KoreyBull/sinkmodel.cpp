@@ -5,8 +5,12 @@ static QMutex m_mutex;
 
 // Ctor
 SinkModel::SinkModel(QObject *parent) :
-    QObject(parent), m_dialogBox(0), m_mesgBox(0)
+    QObject(parent), m_dialogBox(0), m_mesgBox(0),
+    m_songSet(0)
 {
+    m_songSet = new QMap<SongType, QStringList> * [ARTIST_MAX];
+
+    for (int i = 0; i < ARTIST_MAX; m_songSet[i++] = 0);
 }
 
 //Dtor
@@ -17,6 +21,15 @@ SinkModel::~SinkModel( )
 
     delete m_mesgBox;
     m_mesgBox = 0;
+
+    for (int i = 0; i < ARTIST_MAX; ++i)
+    {
+        delete m_songSet[i];
+        m_songSet[i] = 0;
+    }
+
+    delete [] m_songSet;
+    m_songSet = 0;
 }
 
 //Accessors
@@ -78,18 +91,24 @@ tabPage * SinkModel::createTabPage(Tabs key)
 
 const popDialog * SinkModel::getDialogBox()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_dialogBox;
 }
 
 
 const QMessageBox * SinkModel::getMenuMsgBox()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_mesgBox;
 }
 
 
 QStringList SinkModel::getSuggestionList()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_suggestions;
 }
 
@@ -107,6 +126,8 @@ QString SinkModel::getStyleSheet(Tabs key)
 
 QMap<Tabs, QString> SinkModel::getStyleSheets()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_styles;
 }
 
@@ -124,6 +145,8 @@ QString SinkModel::getTabLabel(Tabs key)
 
 QMap<Tabs, QString> SinkModel::getTabLabels()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_tabLabels;
 }
 
@@ -141,6 +164,8 @@ QString SinkModel::getArtistName(Artists key)
 
 QMap<Artists, QString> SinkModel::getArtists( )
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_artists;
 }
 
@@ -158,6 +183,8 @@ QString SinkModel::getSongType(SongType key)
 
 QMap<SongType, QString> SinkModel::getSongTypes()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_songTypes;
 }
 
@@ -175,6 +202,8 @@ QString SinkModel::getPageText(Tabs key)
 
 QMap<Tabs, QString> SinkModel::getPageTexts()
 {
+    QMutexLocker lock(&m_mutex);
+
     return m_pageText;
 }
 
@@ -184,19 +213,28 @@ QStringList SinkModel::getSongs(Artists artist, SongType type)
     QMutexLocker lock(&m_mutex);
     QStringList temp;
 
-    if (!m_songSet.contains(artist))
-        return temp;
+    if ((artist >= BEETHOVEN) && (artist < ARTIST_MAX) && m_songSet)
+    {
+        if (m_songSet[artist] && m_songSet[artist]->contains(type))
+            temp = (*(m_songSet[artist]))[type];
+    }
 
-    if (!m_songSet[artist].contains(type))
-        return temp;
 
-    return m_songSet[artist][type];
+    return temp;
 }
 
 
-QMap<Artists, QMap<SongType, QStringList>> SinkModel::getSongSet()
+QMap<SongType, QStringList> SinkModel::getArtistWorks(Artists artist)
 {
-    return m_songSet;
+    QMutexLocker lock(&m_mutex);
+    QMap<SongType, QStringList> temp;
+
+    if ((artist >= BEETHOVEN) && (artist < ARTIST_MAX))
+    {
+        temp = *(m_songSet[artist]);
+    }
+
+    return temp;
 }
 
 
@@ -238,7 +276,10 @@ void SinkModel::initPageTexts(QMap<Tabs, QString> pages)
 }
 
 
-void SinkModel::initSongSet(QMap<Artists, QMap<SongType, QStringList>> songSet)
+void SinkModel::initSongSet(QMap<SongType, QStringList> * songSet, Artists key)
 {
-    m_songSet = songSet;
+    if (songSet && m_songSet && key >= BEETHOVEN && key < ARTIST_MAX)
+    {
+        m_songSet[key] = songSet;
+    }
 }

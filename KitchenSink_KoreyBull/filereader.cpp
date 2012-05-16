@@ -1,21 +1,25 @@
-#define ROOT_QN         "KitchenSink"
-#define SUGGEST_QN      "SuggestionList"
-#define TABLABEL_QN     "TabLabels"
-#define ARTIST_QN       "Artists"
-#define SONGTYPE_QN     "SongTypes"
-#define PAGE_QN         "PageText"
-#define SONGSET_QN      "SongSet"
-
-
 #include "filereader.h"
-#include <QXmlStreamReader>
-#include <QXmlStreamAttributes>
 #include <QFile>
 
 
+#define FILE_LINES 13
+#define SUG_LIST 0
+#define TAB 1
+#define ART 2
+#define TYPE 3
+#define BC 4
+#define BQ 5
+#define BS 6
+#define BSY 7
+#define BAC 8
+#define BAQ 9
+#define BAS 10
+#define BAY 11
+#define MC 12
+
 
 FileReader::FileReader(QObject *parent) :
-    QObject(parent), m_xmlSrc(":/KitchenSinkData.xml")
+    QObject(parent)
 {
 
 }
@@ -27,205 +31,206 @@ FileReader::~FileReader( )
 }
 
 
-QString FileReader::getXmlSrc() const
+bool FileReader::readFromCSV()
 {
-    return m_xmlSrc;
-}
-
-
-bool FileReader::readFromXml()
-{
-    //QMutexLocker lock(&m_mutex);
-    QFile xmlFile(m_xmlSrc);
-    QXmlStreamReader * reader = new QXmlStreamReader(&xmlFile);
-    QXmlStreamAttributes tokenAttributes;
-    QString tokenQn;
+    QMutexLocker lock(&m_mutex);
+    QFile * fin = new QFile("input_files/inputStrs.txt");
+    QMap<SongType, QStringList> * songSet = 0;
+    QMap<Tabs, QString> * tabText = 0;
+    QMap<SongType, QString> * types = 0;
+    QMap<Artists, QString> * artists = 0;
+    QStringList list;
+    QString temp;
+    qint64 lineLength = 0;
+    char buf[700] = {0};
     bool success = false;
 
-    if (QFile::exists(m_xmlSrc) && xmlFile.open(QIODevice::ReadOnly))
+
+    if (fin->open(QIODevice::ReadOnly))
     {
-        while (!reader->atEnd())
+        for (int i = 0; i < FILE_LINES; ++i)
         {
-            reader->readNext();
+            lineLength = fin->readLine(buf, sizeof(buf));
 
-            if (reader->isStartElement() && reader->qualifiedName().toString() != tr(ROOT_QN))
+            if (lineLength != -1)
             {
-                tokenAttributes = reader->attributes();
-                tokenQn = reader->qualifiedName().toString();
-
-                if (!tokenQn.startsWith('S'))
+                switch (i)
                 {
-                    if (tokenQn == tr(TABLABEL_QN))
-                        readTabLabels(tokenAttributes);
+                case SUG_LIST:
+                    temp = buf;
+                    list = temp.split(";");
 
-                    else if (tokenQn == tr(ARTIST_QN))
-                        readArtistNames(tokenAttributes);
+                    emit storeSuggestionList(list);
+                    list.clear();
+                    temp.clear();
+                    break;
 
-                    else if (tokenQn == tr(PAGE_QN))
-                        readPageTexts(tokenAttributes);
-                }
-                else
-                {
-                    if (tokenQn == tr(SUGGEST_QN))
-                        readSuggestionList(tokenAttributes);
+                case TAB:
+                    tabText = new QMap<Tabs, QString>;
+                    temp = buf;
+                    list = temp.split(";");
 
-                    else if (tokenQn == tr(SONGTYPE_QN))
-                        readSongTypes(tokenAttributes);
+                    for (int i = 0; i <= POPUP; ++i)
+                    {
+                        tabText->insert((Tabs)i, list.at(i));
+                    }
 
-                    else if (tokenQn == tr(SONGSET_QN))
-                        readSongSet(reader, tokenAttributes);
+                    emit storeTabLabels(*tabText);
+                    delete tabText;
+                    temp.clear();
+                    list.clear();
+                    tabText = 0;
+                    break;
+
+                case ART:
+                    artists = new QMap<Artists, QString>;
+                    temp = buf;
+                    list = temp.split(";");
+
+                    for (int i = 0; i < ARTIST_MAX; ++i)
+                    {
+                        artists->insert((Artists)i, list.at(i));
+                    }
+
+                    emit storeArtistNames(*artists);
+                    delete artists;
+                    artists = 0;
+                    temp.clear();
+                    list.clear();
+                    break;
+
+                case TYPE:
+                    types = new QMap<SongType, QString>;
+                    temp = buf;
+                    list = temp.split(";");
+
+                    for (int i = 0; i < SONGTYPE_MAX; ++i)
+                    {
+                        types->insert((SongType)i, list.at(i));
+                    }
+
+                    emit storeSongTypes(*types);
+                    delete types;
+                    types = 0;
+                    temp.clear();
+                    list.clear();
+                    break;
+
+                case BC:
+                    songSet = new QMap<SongType, QStringList>;
+                    temp = buf;
+                    songSet->insert(CONCERTOS, temp.split(";"));
+
+                    break;
+
+                case BQ:
+                    temp = buf;
+                    songSet->insert(QUARTETS, temp.split(";"));
+
+                    break;
+
+                case BS:
+                    temp = buf;
+                    songSet->insert(SONATAS, temp.split(";"));
+
+                    break;
+
+                case BSY:
+                    temp = buf;
+                    songSet->insert(SYMPHONIES, temp.split(";"));
+
+                    emit storeSongSet(songSet, BEETHOVEN);
+
+                    break;
+
+                case BAC:
+                    songSet = new QMap<SongType, QStringList>;
+                    temp = buf;
+                    songSet->insert(CONCERTOS, temp.split(";"));
+
+                    break;
+
+                case BAQ:
+                    temp = buf;
+                    songSet->insert(QUARTETS, temp.split(";"));
+
+                    break;
+
+                case BAS:
+                    temp = buf;
+                    songSet->insert(SONATAS, temp.split(";"));
+
+                    break;
+
+                case BAY:
+                    temp = buf;
+                    songSet->insert(SYMPHONIES, temp.split(";"));
+
+                    emit storeSongSet(songSet, BRAHMS);
+                    break;
+
+                case MC:
+                    songSet = new QMap<SongType, QStringList>;
+                    temp = buf;
+                    songSet->insert(CONCERTOS, temp.split(";"));
+
+                    emit storeSongSet(songSet, MOZART);
+                    success = true;
+
+                    break;
+
+                default:
+                    i = FILE_LINES;
                 }
             }
         }
 
-        success = true;
-        xmlFile.close();
+        fin->close();
     }
 
-
-    delete reader;
-    reader = 0;
+    delete fin;
 
     return success;
 }
 
 
-void FileReader::readTabLabels(QXmlStreamAttributes token)
+bool FileReader::readFromHtml( )
 {
     QMutexLocker lock(&m_mutex);
-    QString temp = "%1";
-    QMap<Tabs, QString> tabLabels;
-
-    for (int i = 0; i <= POPUP; ++i)
-    {
-        if (token.hasAttribute(temp.arg(i)))
-            tabLabels[(Tabs)i] = token.value(temp.arg(i)).toString();
-    }
-
-    emit storeTabLabels(tabLabels);
-}
-
-
-void FileReader::readSuggestionList(QXmlStreamAttributes token)
-{
-    QMutexLocker lock(&m_mutex);
-    QString temp = "%1";
-    QStringList list;
-
-    list.clear();
-
-    if (token.hasAttribute(temp.arg(0)))
-    {
-        temp = token.value(temp.arg(0)).toString();
-
-        list = temp.split(';');
-    }
-
-    emit storeSuggestionList(list);
-}
-
-
-void FileReader::readArtistNames(QXmlStreamAttributes token)
-{
-    QMutexLocker lock(&m_mutex);
-    QString temp("%1");
-    QMap<Artists, QString> names;
-
-    for (int i = 0; i < ARTIST_MAX; ++i)
-    {
-        if (token.hasAttribute(temp.arg(i)))
-            names[(Artists)i] = token.value(temp.arg(i)).toString();
-    }
-
-    emit storeArtistNames(names);
-}
-
-
-void FileReader::readSongTypes(QXmlStreamAttributes token)
-{
-    QMutexLocker lock(&m_mutex);
-    QString temp("%1");
-    QMap<SongType, QString> types;
-
-    for (int i = 0; i < SONGTYPE_MAX; ++i)
-    {
-        if (token.hasAttribute(temp.arg(i)))
-            types[(SongType)i] = token.value(temp.arg(i)).toString();
-    }
-
-    emit storeSongTypes(types);
-}
-
-
-void FileReader::readPageTexts(QXmlStreamAttributes token)
-{
-    QMutexLocker lock(&m_mutex);
-    QString temp("%1");
     QMap<Tabs, QString> text;
+    QFile * file = 0;
+    qint8 ct = 0;
+    QStringList files = QStringList() << "html/intro.html"
+                                      << "html/widget.html"
+                                      << "html/panel.html"
+                                      << "html/list.html"
+                                      << "html/text.html"
+                                      << "html/popup.html";
 
-
-    for (int i = 0; i <= POPUP; ++i)
+    for (qint8 i = INTRO; i <= POPUP; ++i)
     {
-        if (token.hasAttribute(temp.arg(i)))
-            text[(Tabs)i] = *(token.value(temp.arg(i)).string());
+        file = new QFile(files.at(i));
+
+        if (file->open(QIODevice::ReadOnly))
+        {
+            ++ct;
+            text[(Tabs)i] = file->readAll();
+            file->close();
+        }
+
+        delete file;
+        file = 0;
     }
 
     emit storePageTexts(text);
-}
 
-
-void FileReader::readSongSet(QXmlStreamReader * reader, QXmlStreamAttributes token)
-{
-    QMutexLocker lock(&m_mutex);
-    QMap<Artists, QMap<SongType, QStringList>> songSet;
-    QString tokenQn, temp = "%1";
-    Artists art;
-
-    if (reader)
-    {
-        for (qint8 i = 0, c = 0; i < ARTIST_MAX; ++i)
-        {
-            reader->readNext();
-
-            if (reader->isStartElement())
-            {
-                token = reader->attributes();
-                tokenQn = reader->qualifiedName().toString();
-
-                if (tokenQn == "Beethoven")
-                {
-                    art = BEETHOVEN;
-                    c = 4;
-                }
-                else if (tokenQn == "Brahms")
-                {
-                    art = BRAHMS;
-                    c = 4;
-                }
-                else if (tokenQn == "Mozart")
-                {
-                    art = MOZART;
-                    c = 1;
-                }
-                else
-                {
-                    c = 0;
-                }
-
-                for (qint8 k = 0; k < c; ++k)
-                {
-                    songSet[art][(SongType)k] = token.value(temp.arg(k)).string()->split(';');
-                }
-            }
-        }
-    }
-
-    emit storeSongSet(songSet);
+    return (ct == POPUP);
 }
 
 
 bool FileReader::readStyleSheets()
 {
+    QMutexLocker lock(&m_mutex);
     bool success = false;
     QMap<Tabs, QString> styleSheets;
     QFile * file = 0;

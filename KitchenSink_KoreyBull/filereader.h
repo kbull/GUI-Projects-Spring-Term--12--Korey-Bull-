@@ -2,15 +2,13 @@
 #define FILEREADER_H
 
 #include <QObject>
-#include <QString>
 #include <QStringList>
 #include <QMutex>
 #include <QMap>
 #include "Enumerations.h"
 
 // forward decl's
-class QXmlStreamReader;
-class QXmlStreamAttributes;
+class QFile;
 
 
 class FileReader : public QObject
@@ -19,11 +17,11 @@ class FileReader : public QObject
 public:
     explicit FileReader(QObject *parent = 0);
     virtual ~FileReader( );
-    
-    QString getXmlSrc( ) const;
 
-    bool readFromXml( );
+    bool readFromCSV( );
+    bool readFromHtml( );
     bool readStyleSheets( );
+
 
 signals:
     void storeSuggestionList(QStringList);
@@ -32,21 +30,14 @@ signals:
     void storeArtistNames(QMap<Artists, QString>);
     void storeSongTypes(QMap<SongType, QString>);
     void storePageTexts(QMap<Tabs, QString>);
-    void storeSongSet(QMap<Artists, QMap<SongType, QStringList>>);
+    void storeSongSet(QMap<SongType, QStringList> *, Artists);
 
 
 public slots:
     
 private:
     mutable QMutex m_mutex;
-    const QString m_xmlSrc;
 
-    void readSuggestionList(QXmlStreamAttributes);
-    void readTabLabels(QXmlStreamAttributes);
-    void readArtistNames(QXmlStreamAttributes);
-    void readSongTypes(QXmlStreamAttributes);
-    void readPageTexts(QXmlStreamAttributes);
-    void readSongSet(QXmlStreamReader *, QXmlStreamAttributes);
 
 };
 
