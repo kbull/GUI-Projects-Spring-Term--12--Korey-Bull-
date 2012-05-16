@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include <QCommandLinkButton>
 #include <QImage>
+#include <QLabel>
 
 class panelPage : public tabPage
 {
@@ -24,6 +25,7 @@ private:
     QTabWidget * m_tabw;
     QCommandLinkButton * m_disc;
     QImage * m_img;
+    QLabel * m_rtxt;
     // addtl elements
 };
 

@@ -24,6 +24,7 @@ void panelPage::initializePage(const KitchenSink * sink)
     m_tabw = new QTabWidget(this);
     m_larea = new QScrollArea;
     m_rarea = new QScrollArea;
+    m_rtxt = new QLabel;
 
     // layout additional elements
 
