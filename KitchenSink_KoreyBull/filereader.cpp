@@ -273,3 +273,22 @@ bool FileReader::readStyleSheets()
 
    return success;
 }
+
+
+bool FileReader::ReadAll( )
+{
+    bool success = false;
+
+    success = readFromCSV();
+
+    if (success)
+    {
+        success = readFromHtml();
+
+        if (success)
+            success = readStyleSheets();
+    }
+
+    emit finished();
+    return success;
+}

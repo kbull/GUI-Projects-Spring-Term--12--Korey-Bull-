@@ -2,8 +2,10 @@
 #define KITCHENSINK_H
 
 #include <QMainWindow>
-#include "pagebuilder.h"
-#include "popdialog.h"
+#include <QMutex>
+#include "sinkmodel.h"
+#include "filereader.h"
+
 
 namespace Ui {
 class KitchenSink;
@@ -15,12 +17,10 @@ class KitchenSink : public QMainWindow
     
 public:
     explicit KitchenSink(QWidget *parent = 0);
-    ~KitchenSink();
+    virtual ~KitchenSink();
 
     void startObjectCreation( );
-    void setUpMainWindow( );
 
-    bool areThreadsFinished() const;
 
 public slots:
     void objectCreationFinished();
@@ -34,12 +34,11 @@ public slots:
     
 private:
     Ui::KitchenSink *ui;
-    pageBuilder * m_objectPool;
-    popDialog * m_dialogBox;
-    bool m_threadsFinished;
+    FileReader * m_reader;
     mutable QMutex m_mutex;
 
     void connectEvents( );
+    void setUpMainWindow( );
 
 };
 

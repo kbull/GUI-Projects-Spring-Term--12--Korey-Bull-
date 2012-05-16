@@ -14,20 +14,11 @@ SOURCES += main.cpp\
         kitchensink.cpp \
     tabpage.cpp \
     intropage.cpp \
-    tabbuilder.cpp \
-    buildstrategy.cpp \
-    introstrategy.cpp \
-    pagebuilder.cpp \
-    widgetstrategy.cpp \
     widgetpage.cpp \
-    panelstrategy.cpp \
     panelpage.cpp \
     popuppage.cpp \
-    popupstrategy.cpp \
     textpage.cpp \
-    textstrategy.cpp \
     listpage.cpp \
-    liststrategy.cpp \
     popdialog.cpp \
     sinkmodel.cpp \
     filereader.cpp
@@ -35,22 +26,12 @@ SOURCES += main.cpp\
 HEADERS  += kitchensink.h \
     tabpage.h \
     intropage.h \
-    multiton.h \
-    tabbuilder.h \
-    buildstrategy.h \
-    introstrategy.h \
     Enumerations.h \
-    pagebuilder.h \
-    widgetstrategy.h \
     widgetpage.h \
-    panelstrategy.h \
     panelpage.h \
     popuppage.h \
-    popupstrategy.h \
     textpage.h \
-    textstrategy.h \
     listpage.h \
-    liststrategy.h \
     popdialog.h \
     sinkmodel.h \
     filereader.h

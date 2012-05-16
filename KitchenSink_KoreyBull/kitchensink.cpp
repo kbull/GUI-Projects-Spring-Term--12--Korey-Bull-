@@ -1,14 +1,13 @@
 #include "kitchensink.h"
 #include "ui_kitchensink.h"
-#include "multiton.h"
+#include "filereader.h"
 #include <QMessageBox>
 #include <QScrollArea>
+#include <QThread>
 
 
 KitchenSink::KitchenSink(QWidget *parent) :
-    QMainWindow(parent), m_threadsFinished(false),
-    ui(new Ui::KitchenSink), m_objectPool(new pageBuilder),
-    m_dialogBox(0)
+    QMainWindow(parent), ui(new Ui::KitchenSink), m_reader(0)
 {
     ui->setupUi(this);
 
@@ -18,30 +17,30 @@ KitchenSink::~KitchenSink()
 {
     delete ui;
     ui = 0;
-
-    delete m_objectPool;
-    m_objectPool = 0;
-
-    delete m_dialogBox;
-    m_dialogBox = 0;
 }
 
 
 void KitchenSink::startObjectCreation( )
 {
-//    QThread * thread = new QThread;
+    QThread * fileThread = new QThread;
+    m_reader = new FileReader;
 
-//    m_objectPool->moveToThread(thread);
+    m_reader->moveToThread(fileThread);
 
-    connect(m_objectPool, SIGNAL(objectCreationFinished()),
-            this, SLOT(objectCreationFinished()));
-//    connect(thread, SIGNAL(started()), m_objectPool, SLOT(spawnThreads()));
-//    connect(thread, SIGNAL(finished()), this, SLOT(objectCreationFinished()));
-//    connect(m_objectPool, SIGNAL(objectCreationFinished()), thread, SLOT(deleteLater()));
+    connect(fileThread, SIGNAL(started()), m_reader, SLOT(ReadAll()));
+    connect(m_reader, SIGNAL(finished()), fileThread, SLOT(quit()));
+    connect(fileThread, SIGNAL(finished()), fileThread, SLOT(deleteLater()));
+    connect(fileThread, SIGNAL(finished()), this, SLOT(objectCreationFinished()));
+    connect(m_reader, SIGNAL(storeArtistNames(QMap<Artists,QString>)), &(SinkModel::getInstance()), SLOT(initArtistNames(QMap<Artists,QString>)));
+    connect(m_reader, SIGNAL(storePageTexts(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initPageTexts(QMap<Tabs,QString>)));
+    connect(m_reader, SIGNAL(storeSongSet(QMap<SongType,QStringList>*,Artists)), &(SinkModel::getInstance()), SLOT(initSongSet(QMap<SongType,QStringList>*,Artists)));
+    connect(m_reader, SIGNAL(storeSongTypes(QMap<SongType,QString>)), &(SinkModel::getInstance()), SLOT(initSongTypes(QMap<SongType,QString>)));
+    connect(m_reader, SIGNAL(storeSuggestionList(QStringList)), &(SinkModel::getInstance()), SLOT(initSuggestionList(QStringList)));
+    connect(m_reader, SIGNAL(storeTabLabels(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initTabLabels(QMap<Tabs,QString>)));
+    connect(m_reader, SIGNAL(storeStyleSheets(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initStyleSheets(QMap<Tabs,QString>)));
 
-//    thread->start();
-
-    m_objectPool->spawnThreads();
+    fileThread->start();
+    fileThread->wait();
 }
 
 
@@ -57,24 +56,18 @@ void KitchenSink::setUpMainWindow( )
                                  "Popups"
                                };
 
-    tabWidget->clear();
+//    tabWidget->clear();
 
-    for (int i = INTRO; i <= POPUP; ++i)
-    {
-        tabWidget->insertTab(i, Multiton::getInstance().getPage((Tabs)i),
-                             tabStrs[i]);
-    }
+//    for (int i = INTRO; i <= POPUP; ++i)
+//    {
+//        tabWidget->insertTab(i, Multiton::getInstance().getPage((Tabs)i),
+//                             tabStrs[i]);
+//    }
 
-    tabWidget->setCurrentIndex(INTRO);
+//    tabWidget->setCurrentIndex(INTRO);
 
     setStyleSheet("QTabWidget::tab-bar { left: 100px; }");
     connectEvents();
-}
-
-
-bool KitchenSink::areThreadsFinished( ) const
-{
-    return m_threadsFinished;
 }
 
 // public slots
@@ -83,7 +76,10 @@ void KitchenSink::objectCreationFinished( )
 {
     QMutexLocker lock(&m_mutex);
 
-    m_threadsFinished = true;
+    delete m_reader;
+    m_reader = 0;
+
+    setUpMainWindow();
 }
 
 
@@ -92,14 +88,6 @@ void KitchenSink::objectCreationFinished( )
 void KitchenSink::connectEvents( )
 {
 
-    popupPage * temp = dynamic_cast<popupPage *>(Multiton::getInstance().getPage(POPUP));
-
-    connect(temp, SIGNAL(popup()), this, SLOT(popupPressed()));
-    connect(temp, SIGNAL(dialog()), this, SLOT(dialogPressed()));
-
-    widgetPage * temp0 = dynamic_cast<widgetPage *>(Multiton::getInstance().getPage(WIDGET));
-
-    connect(temp0, SIGNAL(menuDialog()), this, SLOT(menuActionDialog()));
 }
 
 
@@ -111,15 +99,6 @@ void KitchenSink::popupPressed( )
 
 void KitchenSink::dialogPressed( )
 {
-    if (m_dialogBox == 0)
-        m_dialogBox = new popDialog;
-
-    m_dialogBox->setWindowTitle("Standard DialogBox");
-    m_dialogBox->setEnabled(true);
-    m_dialogBox->show();
-    m_dialogBox->exec();
-    m_dialogBox->hide();
-    m_dialogBox->setEnabled(false);
 }
 
 

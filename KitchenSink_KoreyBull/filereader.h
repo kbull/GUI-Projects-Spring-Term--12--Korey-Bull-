@@ -32,8 +32,10 @@ signals:
     void storePageTexts(QMap<Tabs, QString>);
     void storeSongSet(QMap<SongType, QStringList> *, Artists);
 
+    void finished();
 
 public slots:
+    bool ReadAll();
     
 private:
     mutable QMutex m_mutex;

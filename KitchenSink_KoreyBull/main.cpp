@@ -23,7 +23,7 @@
 *
 ******************************************************************************/
 #include <QtGui/QApplication>
-//#include "kitchensink.h"
+#include "kitchensink.h"
 #include "sinkmodel.h"
 #include "filereader.h"
 #include <QFile>
@@ -33,13 +33,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-//    KitchenSink w;
+    KitchenSink w;
 
-//    w.startObjectCreation();
+    w.startObjectCreation();
 
-//    w.setUpMainWindow();
-
-//    w.show();
+    w.show();
     
     return a.exec();
 }
