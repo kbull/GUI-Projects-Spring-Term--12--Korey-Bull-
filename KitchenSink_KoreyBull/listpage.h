@@ -3,10 +3,10 @@
 
 #include "tabpage.h"
 #include <QComboBox>
-#include <QListView>
-#include <QTreeView>
+#include <QListWidget>
+#include <QTreeWidget>
 #include <QCompleter>
-
+#include <QLineEdit>
 
 
 class listPage : public tabPage
@@ -23,6 +23,13 @@ signals:
 public slots:
 
 private:
+    QComboBox * m_cbox;
+    QListWidget * m_list;
+    QLineEdit * m_suggest;
+    QCompleter * m_complete;
+    QTreeWidget * m_treew;
+
+    void initTree( );
 
 };
 

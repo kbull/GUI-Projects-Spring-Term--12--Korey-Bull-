@@ -146,11 +146,19 @@ void KitchenSink::dialogRequested()
 
 void KitchenSink::popupRequested()
 {
+    QMessageBox box;
 
+    box.setText("Click anywhere outside this popup to make it disappear.");
+
+    box.setStandardButtons(QMessageBox::NoButton);
+    box.setWindowFlags(Qt::Popup | Qt::Widget);
+    box.setBaseSize(128, 48);
+
+    box.exec();
 }
 
 
-void cursorMoved(int n, QLabel * label)
+void KitchenSink::cursorMoved(int n, QLabel * label)
 {
     if (label)
     {
@@ -161,15 +169,16 @@ void cursorMoved(int n, QLabel * label)
 }
 
 
-void textSelection(QLineEdit * edit, QLabel * label)
+void KitchenSink::textSelection(QLineEdit * edit, QLabel * label)
 {
     if (edit && label)
     {
-        QString temp(" %1, %2");
+        QString temp(" %1");
         int pos = edit->selectionStart();
 
-        temp = temp.arg(pos, pos + edit->selectedText().size());
-
-        label->setText("Selection:" + temp);
+        if (edit->hasSelectedText())
+            label->setText("Selection:" + temp.arg(pos) + "," + temp.arg(pos + edit->selectedText().size()));
+        else
+            cursorMoved(edit->cursorPosition(), label);
     }
 }

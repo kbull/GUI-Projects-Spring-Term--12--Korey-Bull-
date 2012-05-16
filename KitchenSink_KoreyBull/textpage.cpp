@@ -58,15 +58,16 @@ void textPage::initializePage(const KitchenSink * sink)
     m_labels[1]->setText("Password text box:");
     m_labels[2]->setText("Text area:");
 
-    m_cursPos[0]->setText("Selection:");
-    m_cursPos[1]->setText("Selection:");
-    m_cursPos[2]->setText("Selection:");
+    m_cursPos[0]->setText("Selection: 0, 0");
+    m_cursPos[1]->setText("Selection: 0, 0");
+    m_cursPos[2]->setText("Selection: 0, 0");
 
     m_lineEdits[0]->setObjectName("normalTextEdit");
     m_lineEdits[1]->setObjectName("readOnlyTextEdit");
     m_lineEdits[1]->setReadOnly(true);
     m_lineEdits[1]->setBaseSize(m_lineEdits[0]->width(), m_lineEdits[1]->height());
     m_lineEdits[1]->setPlaceholderText("read only");
+    m_lineEdits[1]->setDisabled(true);
     m_lineEdits[2]->setObjectName("passwordTextEdit");
     m_lineEdits[3]->setObjectName("textAreaTextEdit");
     m_lineEdits[3]->setBaseSize(m_lineEdits[3]->width(), m_lineEdits[3]->height() * 4);
