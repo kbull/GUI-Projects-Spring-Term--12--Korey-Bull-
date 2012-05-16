@@ -10,7 +10,7 @@ public:
     panelPage(QWidget * parent = 0);
     virtual ~panelPage( );
 
-    virtual void initializePage( );
+    virtual void initializePage(const KitchenSink *);
     virtual Tabs getTabKey( ) const;
 
 private:

@@ -6,14 +6,9 @@
 #include <QVector>
 #include <QStringList>
 #include <QMessageBox>
+#include <QLineEdit>
 #include "Enumerations.h"
 #include "popdialog.h"
-#include "intropage.h"
-#include "panelpage.h"
-#include "widgetpage.h"
-#include "popuppage.h"
-#include "textpage.h"
-#include "listpage.h"
 
 
 // Singleton Model
@@ -26,12 +21,8 @@ public:
     //Multiton stuff
     static SinkModel & getInstance( );
 
-    // factory method
-    tabPage * createTabPage(Tabs key);
-
     // getters
-    const popDialog * getDialogBox( );
-    const QMessageBox * getMenuMsgBox( );
+    popDialog * getDialogBox( );
 
     QStringList getSuggestionList( );
 
@@ -53,6 +44,24 @@ public:
     QStringList getSongs(Artists artist, SongType type);
     QMap<SongType, QStringList> getArtistWorks(Artists artist);
 
+    void setNormalEdit(QLineEdit *);
+    void setPassEdit(QLineEdit *);
+    void setTextEdit(QLineEdit *);
+
+    QLineEdit * getNormalEdit();
+    QLineEdit * getPassEdit();
+    QLineEdit * getTextEdit();
+
+
+    void setNormalCurs(QLabel *);
+    void setPassCurs(QLabel *);
+    void setTextCurs(QLabel *);
+
+    QLabel * getNormalCurs();
+    QLabel * getPassCurs();
+    QLabel * getTextCurs();
+
+
 signals:
 
 public slots:
@@ -72,7 +81,12 @@ private:
 
     // soon to come popup dialog widget
     popDialog * m_dialogBox;
-    QMessageBox * m_mesgBox;
+    QLineEdit * m_norm;
+    QLineEdit * m_pass;
+    QLineEdit * m_textE;
+    QLabel * m_cnorm;
+    QLabel * m_cpass;
+    QLabel * m_ctext;
     
     //storage members
     QStringList m_suggestions;

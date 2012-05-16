@@ -12,10 +12,10 @@ listPage::~listPage( )
 }
 
 
-void listPage::initializePage( )
+void listPage::initializePage(const KitchenSink * sink)
 {
 
-    tabPage::performBasicSetup("html/list.html");
+    tabPage::performBasicSetup(LIST);
 
     // widget creation
 
@@ -25,6 +25,7 @@ void listPage::initializePage( )
 
     // connections and layout merging
     setLayout(tabPage::m_pageLayout);
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(LIST));
     // anything else?
 }
 

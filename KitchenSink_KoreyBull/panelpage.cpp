@@ -12,14 +12,15 @@ panelPage::~panelPage( )
 }
 
 
-void panelPage::initializePage( )
+void panelPage::initializePage(const KitchenSink * sink)
 {
-    tabPage::performBasicSetup("html/panel.html");
+    tabPage::performBasicSetup(PANEL);
 
     // layout additional elements
 
     // set the main layout
     setLayout(tabPage::m_pageLayout);
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(PANEL));
 }
 
 

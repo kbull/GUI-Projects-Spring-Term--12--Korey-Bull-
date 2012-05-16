@@ -11,14 +11,8 @@ public:
     popupPage(QWidget * parent = 0);
     virtual ~popupPage( );
 
-    virtual void initializePage( );
+    virtual void initializePage(const KitchenSink *);
     virtual Tabs getTabKey( ) const;
-
-signals:
-
-public slots:
-    void popupPressed( );
-    void dialogPressed( );
 
 protected:
 

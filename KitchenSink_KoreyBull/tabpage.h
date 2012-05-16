@@ -7,8 +7,8 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include "Enumerations.h"
-
-
+#include "sinkmodel.h"
+#include "kitchensink.h"
 
 class tabPage : public QWidget
 {
@@ -17,18 +17,12 @@ public:
     explicit tabPage(QWidget *parent = 0);
     virtual ~tabPage( );
 
-    virtual void initializePage( ) = 0;
+    virtual void initializePage(const KitchenSink *) = 0;
     virtual Tabs getTabKey( ) const = 0;
     
 signals:
-    void popup( );
-    void dialog( );
-    void menuDialog( );
     
 public slots:
-    void popupPressed( );
-    void dialogPressed( );
-    void menuAction();
 
 protected:
     QFrame * m_textFrame;
@@ -37,11 +31,11 @@ protected:
     QHBoxLayout * m_hTextLayout;
     QSpacerItem * m_textSpacers[TXT_SPACERS];
 
-    virtual void performBasicSetup(QString txtFile);
+    virtual void performBasicSetup(Tabs key);
 
 private:
     virtual void instantiateBaseElements( );
-    virtual void fillTextEdit(QString fileLoc);
+    virtual void fillTextEdit(Tabs key);
     virtual void setupBasicLayout( );
     
 };

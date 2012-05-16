@@ -15,7 +15,7 @@ public:
     listPage(QWidget * parent = 0);
     virtual ~listPage( );
 
-    virtual void initializePage( );
+    virtual void initializePage(const KitchenSink *);
     virtual Tabs getTabKey( ) const;
 
 signals:

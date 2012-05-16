@@ -21,10 +21,10 @@ popupPage::~popupPage( )
 }
 
 
-void popupPage::initializePage( )
+void popupPage::initializePage(const KitchenSink * sink)
 {
     QVBoxLayout * layout = new QVBoxLayout;
-    tabPage::performBasicSetup("html/popup.html");
+    tabPage::performBasicSetup(POPUP);
 
     m_popup = new QPushButton("Show Popup");
     m_dialog = new QPushButton("Show Dialog");
@@ -40,9 +40,11 @@ void popupPage::initializePage( )
 
     tabPage::m_pageLayout->addRow(layout);
     setLayout(tabPage::m_pageLayout);
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(POPUP));
 
-    connect(m_popup, SIGNAL(clicked()), this, SLOT(popupPressed()));
-    connect(m_dialog, SIGNAL(clicked()), this, SLOT(dialogPressed()));
+    // connect events
+    connect(m_popup, SIGNAL(clicked()), sink, SLOT(popupRequested()));
+    connect(m_dialog, SIGNAL(clicked()), sink, SLOT(dialogRequested()));
 }
 
 

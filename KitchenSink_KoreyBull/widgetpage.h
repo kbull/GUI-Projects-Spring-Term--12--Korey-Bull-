@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include "tabpage.h"
 
+#define BUTTONS 4
 
 class widgetPage : public tabPage
 {
@@ -14,12 +15,14 @@ public:
     widgetPage(QWidget * parent = 0);
     virtual ~widgetPage( );
 
-    virtual void initializePage( );
+    virtual void initializePage(const KitchenSink *);
     virtual Tabs getTabKey( ) const;
 
+public slots:
+
+signals:
 
 private:
-    static const int BUTTONS = 4;
     QMenuBar * m_menu;
     QPushButton * m_pushButtons[BUTTONS];
     QCheckBox * m_enabledCheck;

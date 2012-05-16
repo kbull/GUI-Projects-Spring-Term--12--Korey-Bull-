@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     KitchenSink w;
 
-    w.startObjectCreation();
+    w.initKitchenSink();
 
     w.show();
     

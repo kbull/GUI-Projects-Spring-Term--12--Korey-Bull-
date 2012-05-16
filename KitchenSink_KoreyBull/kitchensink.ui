@@ -74,7 +74,6 @@
      <attribute name="title">
       <string>Tab 2</string>
      </attribute>
-     <zorder>toolboxIcon</zorder>
     </widget>
    </widget>
    <widget class="QFrame" name="toolboxIcon">

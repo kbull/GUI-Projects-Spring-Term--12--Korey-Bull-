@@ -43,13 +43,13 @@ textPage::~textPage( )
 }
 
 
-void textPage::initializePage( )
+void textPage::initializePage(const KitchenSink * sink)
 {
     QHBoxLayout * pageLay = new QHBoxLayout;
     QVBoxLayout * leftLay = new QVBoxLayout;
     QHBoxLayout * textLay[3] = {0};
 
-    tabPage::performBasicSetup("html/text.html");
+    tabPage::performBasicSetup(TEXT);
 
     instantiateWidgets(textLay);
 
@@ -89,6 +89,23 @@ void textPage::initializePage( )
     //combine layouts, connections
     tabPage::m_pageLayout->addRow(pageLay);
     setLayout(tabPage::m_pageLayout);
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(TEXT));
+
+    // connect events
+    connect(m_lineEdits[0], SIGNAL(cursorPositionChanged(int,int)), sink, SLOT(normCursorChg(int,int)));
+    connect(m_lineEdits[0], SIGNAL(selectionChanged()), sink, SLOT(normSelectionChg()));
+    connect(m_lineEdits[2], SIGNAL(cursorPositionChanged(int,int)), sink, SLOT(passCursorChg(int,int)));
+    connect(m_lineEdits[2], SIGNAL(selectionChanged()), sink, SLOT(passSelectionChg()));
+    connect(m_lineEdits[3], SIGNAL(cursorPositionChanged(int,int)), sink, SLOT(textCursorChg(int,int)));
+    connect(m_lineEdits[3], SIGNAL(selectionChanged()), sink, SLOT(textSelectionChg()));
+
+    SinkModel::getInstance().setNormalEdit(m_lineEdits[0]);
+    SinkModel::getInstance().setPassEdit(m_lineEdits[2]);
+    SinkModel::getInstance().setTextEdit(m_lineEdits[3]);
+
+    SinkModel::getInstance().setNormalCurs(m_cursPos[0]);
+    SinkModel::getInstance().setPassCurs(m_cursPos[1]);
+    SinkModel::getInstance().setTextCurs(m_cursPos[2]);
 }
 
 
@@ -96,7 +113,6 @@ Tabs textPage::getTabKey( ) const
 {
     return TEXT;
 }
-
 
 
 void textPage::instantiateWidgets(QHBoxLayout *textLay[])

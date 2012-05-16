@@ -1,5 +1,5 @@
 #include "widgetpage.h"
-#include "QWidgetAction"
+#include <QWidgetAction>
 
 
 widgetPage::widgetPage(QWidget * parent)
@@ -36,9 +36,10 @@ widgetPage::~widgetPage( )
 
 }
 
-void widgetPage::initializePage( )
+
+void widgetPage::initializePage(const KitchenSink * sink)
 {
-    tabPage::performBasicSetup("html/widget.html");
+    tabPage::performBasicSetup(WIDGET);
     QGridLayout * gridLayout = new QGridLayout;
     QHBoxLayout * hLayout[4] = {0};
 
@@ -118,10 +119,10 @@ void widgetPage::initializePage( )
     setLayout(tabPage::m_pageLayout);
 
     // style sheet(s)
-    setStyleSheet("QPushButton#squareButton { background-image: url(:/jimmy.jpg); }"\
-                  "QPushButton#toggleButton { background-image: url(:/jimmy.jpg); }");
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(WIDGET));
 
-    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(menuAction()));
+    //connect events
+    connect(m_menu, SIGNAL(triggered(QAction*)), sink, SLOT(menuActionBox()));
 }
 
 
@@ -153,9 +154,6 @@ void widgetPage::initializeMenu( )
     action->setDefaultWidget(italicL);
     menu->addAction(action);
 
-    menu->setStyleSheet("QLabel#boldL { font: bold }" \
-                        "QLabel#italicL { font-style: italic }");
-
     menu = menu->addMenu("More >>");
 
     codeL = new QLabel("<code>Code</code>");
@@ -176,8 +174,6 @@ void widgetPage::initializeMenu( )
     action->setDefaultWidget(underL);
     menu->addAction(action);
 
-    menu->setStyleSheet("QLabel#strikeL { text-decoration: line-through }" \
-                        "QLabel#underL { text-decoration: underline }");
 
     menu = m_menu->addMenu("Fruit");
 
@@ -204,11 +200,6 @@ void widgetPage::initializeMenu( )
     action = new QWidgetAction(this);
     action->setDefaultWidget(brownL);
     menu->addAction(action);
-
-    menu->setStyleSheet("QLabel#redL { color: red; font: bold; }" \
-                        "QLabel#yellowL { color: yellow; font: bold; }" \
-                        "QLabel#whiteL { color: white; font: bold; }" \
-                        "QLabel#brownL { color: brown; font: bold; }");
 
     menu = m_menu->addMenu("Term");
 

@@ -1,9 +1,10 @@
 #include "kitchensink.h"
 #include "ui_kitchensink.h"
 #include "filereader.h"
+#include "pagefactory.h"
 #include <QMessageBox>
 #include <QScrollArea>
-#include <QThread>
+
 
 
 KitchenSink::KitchenSink(QWidget *parent) :
@@ -20,17 +21,10 @@ KitchenSink::~KitchenSink()
 }
 
 
-void KitchenSink::startObjectCreation( )
+void KitchenSink::initKitchenSink( )
 {
-    QThread * fileThread = new QThread;
     m_reader = new FileReader;
 
-    m_reader->moveToThread(fileThread);
-
-    connect(fileThread, SIGNAL(started()), m_reader, SLOT(ReadAll()));
-    connect(m_reader, SIGNAL(finished()), fileThread, SLOT(quit()));
-    connect(fileThread, SIGNAL(finished()), fileThread, SLOT(deleteLater()));
-    connect(fileThread, SIGNAL(finished()), this, SLOT(objectCreationFinished()));
     connect(m_reader, SIGNAL(storeArtistNames(QMap<Artists,QString>)), &(SinkModel::getInstance()), SLOT(initArtistNames(QMap<Artists,QString>)));
     connect(m_reader, SIGNAL(storePageTexts(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initPageTexts(QMap<Tabs,QString>)));
     connect(m_reader, SIGNAL(storeSongSet(QMap<SongType,QStringList>*,Artists)), &(SinkModel::getInstance()), SLOT(initSongSet(QMap<SongType,QStringList>*,Artists)));
@@ -39,14 +33,20 @@ void KitchenSink::startObjectCreation( )
     connect(m_reader, SIGNAL(storeTabLabels(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initTabLabels(QMap<Tabs,QString>)));
     connect(m_reader, SIGNAL(storeStyleSheets(QMap<Tabs,QString>)), &(SinkModel::getInstance()), SLOT(initStyleSheets(QMap<Tabs,QString>)));
 
-    fileThread->start();
-    fileThread->wait();
+    m_reader->ReadAll();
+
+    delete m_reader;
+    m_reader = 0;
+
+    setUpMainWindow();
 }
 
 
 void KitchenSink::setUpMainWindow( )
 {
+    PageFactory * factory = new PageFactory;
     QTabWidget * tabWidget = ui->tabWidget;
+    QMap<Tabs, QString> labels;
     const char * tabStrs[] = {
                                  "Intro",
                                  "Widgets",
@@ -56,31 +56,27 @@ void KitchenSink::setUpMainWindow( )
                                  "Popups"
                                };
 
-//    tabWidget->clear();
+    tabWidget->clear();
 
-//    for (int i = INTRO; i <= POPUP; ++i)
-//    {
-//        tabWidget->insertTab(i, Multiton::getInstance().getPage((Tabs)i),
-//                             tabStrs[i]);
-//    }
+    labels = SinkModel::getInstance().getTabLabels();
 
-//    tabWidget->setCurrentIndex(INTRO);
+    tabWidget->insertTab(INTRO, factory->createIntroPage(this), labels[INTRO]);
+    tabWidget->insertTab(WIDGET, factory->createWidgetPage(this), labels[WIDGET]);
+    tabWidget->insertTab(PANEL, factory->createPanelPage(this), labels[PANEL]);
+    tabWidget->insertTab(LIST, factory->createListPage(this), labels[LIST]);
+    tabWidget->insertTab(TEXT, factory->createTextPage(this), labels[TEXT]);
+    tabWidget->insertTab(POPUP, factory->createPopupPage(this), labels[POPUP]);
+
+    delete factory;
+    factory = 0;
+
+    tabWidget->setCurrentIndex(INTRO);
 
     setStyleSheet("QTabWidget::tab-bar { left: 100px; }");
     connectEvents();
 }
 
 // public slots
-
-void KitchenSink::objectCreationFinished( )
-{
-    QMutexLocker lock(&m_mutex);
-
-    delete m_reader;
-    m_reader = 0;
-
-    setUpMainWindow();
-}
 
 
 // private
@@ -91,18 +87,45 @@ void KitchenSink::connectEvents( )
 }
 
 
-void KitchenSink::popupPressed( )
+void KitchenSink::normCursorChg(int o, int n)
 {
-
+    if (o != n)
+        cursorMoved(n, SinkModel::getInstance().getNormalCurs());
 }
 
 
-void KitchenSink::dialogPressed( )
+void KitchenSink::passCursorChg(int o, int n)
 {
+    if (o != n)
+        cursorMoved(n, SinkModel::getInstance().getPassCurs());
 }
 
 
-void KitchenSink::menuActionDialog( )
+void KitchenSink::textCursorChg(int o, int n)
+{
+    if (o != n)
+        cursorMoved(n, SinkModel::getInstance().getTextCurs());
+}
+
+
+void KitchenSink::normSelectionChg()
+{
+    textSelection(SinkModel::getInstance().getNormalEdit(), SinkModel::getInstance().getNormalCurs());
+}
+
+
+void KitchenSink::passSelectionChg()
+{
+    textSelection(SinkModel::getInstance().getPassEdit(), SinkModel::getInstance().getPassCurs());
+}
+
+
+void KitchenSink::textSelectionChg()
+{
+    textSelection(SinkModel::getInstance().getTextEdit(), SinkModel::getInstance().getTextCurs());
+}
+
+void KitchenSink::menuActionBox()
 {
     QMessageBox box;
 
@@ -112,4 +135,41 @@ void KitchenSink::menuActionDialog( )
     box.setStandardButtons(QMessageBox::Ok);
 
     box.exec();
+}
+
+
+void KitchenSink::dialogRequested()
+{
+    SinkModel::getInstance().getDialogBox()->exec();
+}
+
+
+void KitchenSink::popupRequested()
+{
+
+}
+
+
+void cursorMoved(int n, QLabel * label)
+{
+    if (label)
+    {
+        QString temp(" %1, 0");
+
+        label->setText("Selection:" + temp.arg(n));
+    }
+}
+
+
+void textSelection(QLineEdit * edit, QLabel * label)
+{
+    if (edit && label)
+    {
+        QString temp(" %1, %2");
+        int pos = edit->selectionStart();
+
+        temp = temp.arg(pos, pos + edit->selectedText().size());
+
+        label->setText("Selection:" + temp);
+    }
 }

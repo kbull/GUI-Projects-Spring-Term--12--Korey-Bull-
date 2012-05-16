@@ -41,6 +41,7 @@ bool FileReader::readFromCSV()
     QMap<Artists, QString> * artists = 0;
     QStringList list;
     QString temp;
+    QChar ch('\n');
     qint64 lineLength = 0;
     char buf[700] = {0};
     bool success = false;
@@ -58,6 +59,7 @@ bool FileReader::readFromCSV()
                 {
                 case SUG_LIST:
                     temp = buf;
+                    temp = temp.remove(ch);
                     list = temp.split(";");
 
                     emit storeSuggestionList(list);
@@ -68,6 +70,7 @@ bool FileReader::readFromCSV()
                 case TAB:
                     tabText = new QMap<Tabs, QString>;
                     temp = buf;
+                    temp = temp.remove(ch);
                     list = temp.split(";");
 
                     for (int i = 0; i <= POPUP; ++i)
@@ -85,6 +88,7 @@ bool FileReader::readFromCSV()
                 case ART:
                     artists = new QMap<Artists, QString>;
                     temp = buf;
+                    temp = temp.remove(ch);
                     list = temp.split(";");
 
                     for (int i = 0; i < ARTIST_MAX; ++i)
@@ -102,6 +106,7 @@ bool FileReader::readFromCSV()
                 case TYPE:
                     types = new QMap<SongType, QString>;
                     temp = buf;
+                    temp = temp.remove(ch);
                     list = temp.split(";");
 
                     for (int i = 0; i < SONGTYPE_MAX; ++i)
@@ -119,25 +124,37 @@ bool FileReader::readFromCSV()
                 case BC:
                     songSet = new QMap<SongType, QStringList>;
                     temp = buf;
-                    songSet->insert(CONCERTOS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(CONCERTOS, list);
 
                     break;
 
                 case BQ:
                     temp = buf;
-                    songSet->insert(QUARTETS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(QUARTETS, list);
 
                     break;
 
                 case BS:
                     temp = buf;
-                    songSet->insert(SONATAS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(SONATAS, list);
 
                     break;
 
                 case BSY:
                     temp = buf;
-                    songSet->insert(SYMPHONIES, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(SYMPHONIES, list);
 
                     emit storeSongSet(songSet, BEETHOVEN);
 
@@ -146,25 +163,37 @@ bool FileReader::readFromCSV()
                 case BAC:
                     songSet = new QMap<SongType, QStringList>;
                     temp = buf;
-                    songSet->insert(CONCERTOS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(CONCERTOS, list);
 
                     break;
 
                 case BAQ:
                     temp = buf;
-                    songSet->insert(QUARTETS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(QUARTETS, list);
 
                     break;
 
                 case BAS:
                     temp = buf;
-                    songSet->insert(SONATAS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(SONATAS, list);
 
                     break;
 
                 case BAY:
                     temp = buf;
-                    songSet->insert(SYMPHONIES, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(SYMPHONIES, list);
 
                     emit storeSongSet(songSet, BRAHMS);
                     break;
@@ -172,7 +201,10 @@ bool FileReader::readFromCSV()
                 case MC:
                     songSet = new QMap<SongType, QStringList>;
                     temp = buf;
-                    songSet->insert(CONCERTOS, temp.split(";"));
+                    temp = temp.remove(ch);
+                    list = temp.split(";");
+
+                    songSet->insert(CONCERTOS, list);
 
                     emit storeSongSet(songSet, MOZART);
                     success = true;
@@ -224,7 +256,7 @@ bool FileReader::readFromHtml( )
 
     emit storePageTexts(text);
 
-    return (ct == POPUP);
+    return ((ct - 1) == POPUP);
 }
 
 
@@ -251,23 +283,21 @@ bool FileReader::readStyleSheets()
 
             if (file->open(QIODevice::ReadOnly))
             {
-                styleSheets[(Tabs)cnt] = file->readAll();
+                styleSheets[(Tabs)cnt++] = file->readAll();
             }
             else
             {
-                styleSheets[(Tabs)cnt] = "";
+                styleSheets[(Tabs)cnt++] = "";
             }
 
             file->close();
             delete file;
             file = 0;
-        }
-
-        if (cnt < POPUP)
-            ++cnt;
-        else
-            success = true;
+        }        
    }
+
+   if ((cnt - 1) == POPUP)
+       success = true;
 
    emit storeStyleSheets(styleSheets);
 
@@ -290,5 +320,6 @@ bool FileReader::ReadAll( )
     }
 
     emit finished();
+
     return success;
 }

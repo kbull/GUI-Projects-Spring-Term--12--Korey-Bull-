@@ -30,28 +30,13 @@ tabPage::~tabPage( )
 }
 
 
-void tabPage::dialogPressed()
-{
-    emit dialog();
-}
-
-
-void tabPage::popupPressed()
-{
-    emit popup();
-}
-
-
-void tabPage::menuAction()
-{
-    emit menuDialog();
-}
-
-void tabPage::performBasicSetup(QString txtFile)
+void tabPage::performBasicSetup(Tabs key)
 {
     instantiateBaseElements();
-    fillTextEdit(txtFile);
+    fillTextEdit(key);
     setupBasicLayout();
+
+    m_textFrame->setObjectName(SinkModel::getInstance().getTabLabel(key) + "Frame");
 }
 
 
@@ -74,27 +59,20 @@ void tabPage::instantiateBaseElements( )
         }
         else // top & bottom
         {
-            m_textSpacers[i] = new QSpacerItem(130, 20);
+            m_textSpacers[i] = new QSpacerItem(130, 10);
         }
     }
+
 }
 
 
-void tabPage::fillTextEdit(QString fileLoc)
+void tabPage::fillTextEdit(Tabs key)
 {
-    QFile htmlFile(fileLoc);
-    QTextStream htmlIn(&htmlFile);
-    QString html = "";
-
-    if (htmlFile.open(QFile::ReadOnly))
+    if ((key >= INTRO) && (key <= POPUP))
     {
-        html = htmlIn.readAll();
-
         m_text->setTextFormat(Qt::RichText);
-        m_text->setText(html);
+        m_text->setText(SinkModel::getInstance().getPageText(key));
         m_text->setWordWrap(true);
-
-        htmlFile.close();
     }
 }
 

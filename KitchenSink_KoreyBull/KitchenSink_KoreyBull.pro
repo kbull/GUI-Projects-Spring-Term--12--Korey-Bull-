@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     listpage.cpp \
     popdialog.cpp \
     sinkmodel.cpp \
-    filereader.cpp
+    filereader.cpp \
+    pagefactory.cpp
 
 HEADERS  += kitchensink.h \
     tabpage.h \
@@ -34,7 +35,8 @@ HEADERS  += kitchensink.h \
     listpage.h \
     popdialog.h \
     sinkmodel.h \
-    filereader.h
+    filereader.h \
+    pagefactory.h
 
 FORMS    += kitchensink.ui \
     popdialog.ui

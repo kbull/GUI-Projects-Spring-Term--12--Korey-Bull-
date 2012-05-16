@@ -13,11 +13,14 @@ introPage::~introPage()
 }
 
 
-void introPage::initializePage( )
+void introPage::initializePage(const KitchenSink * sink)
 {
-    tabPage::performBasicSetup("html/intro.html");
+    tabPage::performBasicSetup(INTRO);
 
     QWidget::setLayout(tabPage::m_pageLayout);
+
+    setStyleSheet(SinkModel::getInstance().getStyleSheet(INTRO));
+
 }
 
 

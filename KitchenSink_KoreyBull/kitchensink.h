@@ -19,18 +19,24 @@ public:
     explicit KitchenSink(QWidget *parent = 0);
     virtual ~KitchenSink();
 
-    void startObjectCreation( );
+    void initKitchenSink( );
 
+
+signals:
 
 public slots:
-    void objectCreationFinished();
+    void normCursorChg(int, int);
+    void passCursorChg(int, int);
+    void textCursorChg(int, int);
 
-    // popup panel slots
-    void popupPressed();
-    void dialogPressed();
+    //edit selection change
+    void normSelectionChg();
+    void passSelectionChg();
+    void textSelectionChg();
 
-    //widget panel slots
-    void menuActionDialog( );
+    void menuActionBox();
+    void dialogRequested();
+    void popupRequested();
     
 private:
     Ui::KitchenSink *ui;
@@ -39,6 +45,8 @@ private:
 
     void connectEvents( );
     void setUpMainWindow( );
+    void cursorMoved(int n, QLabel *);
+    void textSelection(QLineEdit *, QLabel *);
 
 };
 

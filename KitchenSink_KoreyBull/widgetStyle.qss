@@ -1,51 +1,68 @@
-QMenu::item
+QPushButton#squareButton
 {
-    text-align: left;
-    font-style: oblique;
+    background-image: url(:/jimmy.jpg);
 }
 
-QMenu::item
+QPushButton#toggleButton
 {
-    text-align: left;
+    background-image: url(:/jimmy.jpg);
+}
+
+QLabel#boldL
+{
+    font: bold;
+}
+
+QLabel#italicL
+{
     font-style: italic;
 }
 
-QMenu::item[text="Apple"]
+QLabel#strikeL
 {
-    text-align: left;
-    color: red;
-    font-style: oblique;
-}
-
-QMenu::item[text="Banana"]
-{
-    text-align: left;
-    color: yellow;
-    font-style: oblique;
-}
-
-QMenu::item[text="Coconut"]
-{
-    text-align: left;
-    color: white;
-    font-style: oblique;
-}
-
-QMenu::item[text="Donut"]
-{
-    text-align: left;
-    color: brown;
-    font-style: oblique;
-}
-
-QMenu::item[text="Underlined"]
-{
-    text-align: left;
-    text-decoration: underline;
-}
-
-QMenu::item[text="Strikethrough"]
-{
-    text-align: left;
     text-decoration: line-through;
+}
+
+QLabel#underL
+{
+    text-decoration: underline
+}
+
+QLabel#redL
+{
+    color: red;
+    font: bold;
+}
+
+QLabel#yellowL
+{
+    color: yellow;
+    font: bold;
+}
+
+QLabel#whiteL
+{
+    color: white;
+    font: bold;
+}
+
+QLabel#brownL
+{
+    color: brown;
+    font: bold;
+}
+
+QPushButton#squareButton
+{
+    background-image: url(toolBoxIcon.png);
+}
+
+QPushButton#squareToggle
+{
+    background-image: url(toolBoxIcon.png);
+}
+
+QFrame#IntroFrame
+{
+    color: rgb(191, 42, 42);
 }
