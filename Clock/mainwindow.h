@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QPushButton>
-#include <QHash>
+#include <QVector>
+#include <QThread>
 #include "clockview.h"
 #include "clockmodel.h"
 
@@ -15,18 +16,33 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     virtual ~MainWindow();
+
+    void initAndSetup();
+
+signals:
+
+public slots:
+    void switchViewPrev();
+    void switchViewNext();
+
+protected:
     
 private:
-    Ui::MainWindow *ui;
-    QPushButton * _viewForward;
-    QPushButton * _viewBackward;
+    Ui::MainWindow * _ui;
+    QPushButton * _viewNx;
+    QPushButton * _viewPr;
     ClockModel * _model;
-    QHash<ViewMode, ClockView *> _views;
+    QThread * _modelThread;
+    QVector<ClockView *> _views;
 
+    void purgeViews();
+    void initViews();
+    void initModel();
+    void collectThreads();
 
 };
 

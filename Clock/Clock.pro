@@ -14,13 +14,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     clockmodel.cpp \
     clockview.cpp \
-    clockviewfactory.cpp
+    clockviewfactory.cpp \
+    clockcontroller.cpp
 
 HEADERS  += mainwindow.h \
     clockmodel.h \
     clockview.h \
     Enumerations.h \
     ISubject.h \
-    clockviewfactory.h
+    clockviewfactory.h \
+    IController.h \
+    clockcontroller.h
 
 FORMS    += mainwindow.ui

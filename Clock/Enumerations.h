@@ -5,7 +5,8 @@ enum ViewMode
 {
     ANALOG = 0,
     DIGITAL = 1,
-    BINARY = 2
+    BINARY = 2,
+    VMODE_MAX = 3
 };
 
 #endif // ENUMERATIONS_H

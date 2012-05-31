@@ -25,9 +25,28 @@ ViewMode ClockModel::getCurrentState() const
 }
 
 
+QTime ClockModel::getCurrentTime() const
+{
+    return _curTime;
+}
+
+
 bool ClockModel::isRunning() const
 {
     return _running;
+}
+
+
+void ClockModel::registerObserver(QWidget * obs)
+{
+    //using signals & slots for Observer pattern over typical implementation
+    // this function will connect the necessary signals/slots defined by the view interface
+}
+
+
+void ClockModel::removeObserver(QWidget * obs)
+{
+// this function will disconnect the necessary signals/slots defined by the view interface
 }
 
 
@@ -48,6 +67,7 @@ void ClockModel::startTimer( )
 
 void ClockModel::timerComplete( )
 {
+    _curTime = QTime::currentTime();
     emit notify();
 
     startTimer();
