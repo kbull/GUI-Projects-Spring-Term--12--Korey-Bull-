@@ -67,10 +67,11 @@ void ClockModel::startTimer( )
 
 void ClockModel::timerComplete( )
 {
+    startTimer();
+
     _curTime = QTime::currentTime();
     emit notify();
 
-    startTimer();
 }
 
 

@@ -2,12 +2,6 @@
 #include "ui_mainwindow.h"
 #include "clockviewfactory.h"
 
-typedef enum UserButtons
-{
-    PREVIOUS = 0,
-    NEXT = 1,
-    USRBTTN_MAX = 2
-} UserButtons;
 
 
 MainWindow::MainWindow(QWidget *parent) :

@@ -15,7 +15,7 @@ SOURCES += main.cpp\
     clockmodel.cpp \
     clockview.cpp \
     clockviewfactory.cpp \
-    clockcontroller.cpp
+    analogcontroller.cpp
 
 HEADERS  += mainwindow.h \
     clockmodel.h \
@@ -24,6 +24,6 @@ HEADERS  += mainwindow.h \
     ISubject.h \
     clockviewfactory.h \
     IController.h \
-    clockcontroller.h
+    analogcontroller.h
 
 FORMS    += mainwindow.ui
