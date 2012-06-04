@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QPushButton>
-#include <QVector>
+#include <QHash>
 #include <QThread>
+#include <QMutex>
 #include "clockview.h"
-#include "clockmodel.h"
+#include "clockcontroller.h"
 
 
 namespace Ui {
@@ -24,6 +25,7 @@ public:
     void initAndSetup();
 
 signals:
+    void clockViewChanged(bool dir);
 
 public slots:
     void switchViewPrev();
@@ -35,14 +37,18 @@ private:
     Ui::MainWindow * _ui;
     QPushButton * _viewNx;
     QPushButton * _viewPr;
-    ClockModel * _model;
-    QThread * _modelThread;
-    QVector<ClockView *> _views;
+    ClockController * _ctrl;
+    QThread * _ctrlThread;
+    QHash<ViewMode, ClockView *> _views;
+    mutable QMutex _mutex;
 
     void purgeViews();
     void initViews();
-    void initModel();
+    void initController();
     void collectThreads();
+
+    MainWindow(const MainWindow &);
+    MainWindow & operator=(const MainWindow &);
 
 };
 

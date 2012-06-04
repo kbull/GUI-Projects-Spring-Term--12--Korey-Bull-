@@ -6,23 +6,22 @@
 #include <QTimer>
 #include <QTime>
 #include <QList>
-#include "ISubject.h"
 #include "Enumerations.h"
 
-class ClockModel : public QObject, public ISubject
+
+class ClockModel : public QObject
 {
     Q_OBJECT
 
-public:    
-    explicit ClockModel(QObject *parent = 0);
+public:        
     virtual ~ClockModel();
 
+    static ClockModel & getInstance( );
     ViewMode getCurrentState( ) const;
-    QTime getCurrentTime( ) const;
+    void getDecimalTime(quint8 & h, quint8 & m, quint8 & s);
+    void getBCDTime(quint8 & ht, quint8 & ho, quint8 & mt,
+                    quint8 & mo, quint8 & st, quint8 & so);
     bool isRunning() const;
-
-    virtual void registerObserver(QWidget *);
-    virtual void removeObserver(QWidget *);
 
 protected:
 
@@ -31,17 +30,18 @@ signals:
     
 public slots:
     void startTimer();
+    void stopTimer();
     void timerComplete();
-    void changeState(ViewMode);
+    void changeState(bool dir);
 
 private:
     ViewMode _currentState;
     QTimer * _timer;
     bool _running;
     QTime _curTime;
-    mutable QMutex _mutex;
+    static QMutex _mutex;
 
-
+    explicit ClockModel(QObject *parent = 0);
     ClockModel(const ClockModel &);
     ClockModel & operator=(const ClockModel &);
 

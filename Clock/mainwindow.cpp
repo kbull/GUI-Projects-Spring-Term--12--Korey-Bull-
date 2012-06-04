@@ -6,7 +6,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), _ui(new Ui::MainWindow), _viewNx(0),
-    _viewPr(0), _model(0), _modelThread(0)
+    _viewPr(0), _ctrlThread(0), _ctrl(0)
 {
     _ui->setupUi(this);
 
@@ -26,11 +26,11 @@ MainWindow::~MainWindow()
 
     collectThreads();
 
-    delete _model;
-    _model = 0;
+    delete _ctrlThread;
+    _ctrlThread = 0;
 
-    delete _modelThread;
-    _modelThread = 0;
+    delete _ctrl;
+    _ctrl = 0;
 
     purgeViews();
 }
@@ -40,21 +40,42 @@ void MainWindow::initAndSetup( )
 {
     // stuff
     initViews();
-    initModel();
+    initController();
 }
 
 
 void MainWindow::switchViewPrev( )
 {
-
+    emit clockViewChanged(false);
 }
 
 
 void MainWindow::switchViewNext( )
 {
+    emit clockViewChanged(true);
+}
+
+
+void MainWindow::purgeViews()
+{
 
 }
 
 
+void MainWindow::initViews()
+{
 
+}
+
+
+void MainWindow::initController()
+{
+
+}
+
+
+void MainWindow::collectThreads()
+{
+
+}
 
