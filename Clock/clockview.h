@@ -1,9 +1,9 @@
 #ifndef CLOCKVIEW_H
 #define CLOCKVIEW_H
 
-#include <Qt>
+#include <QWidget>
 
-class ClockView //ClockView abstract base class that defines Observer interface
+class ClockView : public QWidget //ClockView abstract base class that defines Observer interface
 {
     Q_OBJECT
 public:
@@ -16,7 +16,8 @@ public slots:
     virtual void updateState(quint8 *, quint8) = 0;
 
 protected:
-    explicit ClockView( )
+    explicit ClockView(QWidget * parent = 0)
+        : QWidget(parent)
     { }
 
 };

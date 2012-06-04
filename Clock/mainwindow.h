@@ -2,10 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPushButton>
 #include <QHash>
 #include <QThread>
-#include <QMutex>
 #include "clockview.h"
 #include "clockcontroller.h"
 
@@ -30,22 +28,20 @@ signals:
 public slots:
     void switchViewPrev();
     void switchViewNext();
+    void closeEvent(QCloseEvent *);
 
 protected:
     
 private:
     Ui::MainWindow * _ui;
-    QPushButton * _viewNx;
-    QPushButton * _viewPr;
     ClockController * _ctrl;
     QThread * _ctrlThread;
     QHash<ViewMode, ClockView *> _views;
-    mutable QMutex _mutex;
 
     void purgeViews();
     void initViews();
     void initController();
-    void collectThreads();
+    void enableButtons(bool enable);
 
     MainWindow(const MainWindow &);
     MainWindow & operator=(const MainWindow &);

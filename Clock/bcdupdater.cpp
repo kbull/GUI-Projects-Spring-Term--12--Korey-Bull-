@@ -12,7 +12,7 @@ BCDUpdater::~BCDUpdater()
 }
 
 
-quint8 BCDUpdater::updateView(quint8 *& data)
+quint8 BCDUpdater::initData(quint8 *& data)
 {
     quint8 size = 0;
 

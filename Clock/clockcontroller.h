@@ -4,12 +4,13 @@
 #include "IController.h"
 #include <QMutex>
 #include <QThread>
+#include <QObject>
 
-class ClockController : public IController
+class ClockController : public QObject, public IController
 {
     Q_OBJECT
 public:
-    ClockController();
+    explicit ClockController(QObject * parent = 0);
     virtual ~ClockController();
 
     virtual void forceViewUpdate();

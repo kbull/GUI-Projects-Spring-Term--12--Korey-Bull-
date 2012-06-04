@@ -1,11 +1,10 @@
 #ifndef DIGITALVIEW_H
 #define DIGITALVIEW_H
 
-#include <QWidget>
 #include "clockview.h"
 
 
-class DigitalView : public QWidget, public ClockView
+class DigitalView : public ClockView
 {
     Q_OBJECT
 public:
@@ -23,6 +22,8 @@ private:
     quint8 _mt, _mo;
     quint8 _st, _so;
     
+    void drawNumber(QPainter, quint16, quint16, quint16);
+    void drawColon(QPainter, quint16, quint16);
 };
 
 #endif // DIGITALVIEW_H

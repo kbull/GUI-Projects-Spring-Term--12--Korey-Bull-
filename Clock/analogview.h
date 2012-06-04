@@ -1,10 +1,9 @@
 #ifndef ANALOGVIEW_H
 #define ANALOGVIEW_H
 
-#include <QWidget>
 #include "clockview.h"
 
-class AnalogView : public QWidget, public ClockView
+class AnalogView : public ClockView
 {
     Q_OBJECT
 public:

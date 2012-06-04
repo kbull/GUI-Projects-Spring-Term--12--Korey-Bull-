@@ -13,9 +13,12 @@ public:
 
     virtual quint8 initData(quint8 *&) = 0;
 
-private:
+protected:
     IUpdater()
     { }
+
+private:
+
 
     IUpdater(const IUpdater &);
     IUpdater & operator=(const IUpdater &);

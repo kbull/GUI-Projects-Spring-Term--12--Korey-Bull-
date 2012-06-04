@@ -1,11 +1,10 @@
 #ifndef BINARYVIEW_H
 #define BINARYVIEW_H
 
-#include <QWidget>
 #include "clockview.h"
 
 
-class BinaryView : public QWidget, public ClockView
+class BinaryView : public ClockView
 {
     Q_OBJECT
 public:
@@ -21,7 +20,11 @@ private:
     quint8 _ht, _ho;
     quint8 _mt, _mo;
     quint8 _st, _so;
+    QColor _onClr, _offClr;
     
+    void drawHours(QPainter);
+    void drawMinutes(QPainter);
+    void drawSeconds(QPainter);
 };
 
 #endif // BINARYVIEW_H

@@ -14,7 +14,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     clockmodel.cpp \
     clockview.cpp \
-    clockviewfactory.cpp \
     clockcontroller.cpp \
     bcdupdater.cpp \
     decupdater.cpp \
@@ -26,7 +25,6 @@ HEADERS  += mainwindow.h \
     clockmodel.h \
     clockview.h \
     Enumerations.h \
-    clockviewfactory.h \
     IController.h \
     clockcontroller.h \
     IUpdater.h \
@@ -35,6 +33,7 @@ HEADERS  += mainwindow.h \
     UpdaterFactory.h \
     analogview.h \
     binaryview.h \
-    digitalview.h
+    digitalview.h \
+    ViewFactory.h
 
 FORMS    += mainwindow.ui

@@ -18,7 +18,7 @@ signals:
     virtual void supplyNewData(quint8 *, quint8) = 0;
 
 public slots:
-    virtual void updateModel(ViewMode ) = 0;
+    virtual void updateModel(bool) = 0;
     virtual void updateViewData() = 0;
 
 

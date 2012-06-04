@@ -4,8 +4,8 @@
 #include <QApplication>
 
 
-ClockController::ClockController()
-    : _cView(0), _modelT(new QThread)
+ClockController::ClockController(QObject * parent)
+    : QObject(parent), _cView(0), _modelT(new QThread)
 {
     ClockModel::getInstance().moveToThread(_modelT);
 
@@ -29,13 +29,19 @@ void ClockController::forceViewUpdate()
     UpdaterFactory * factory = new UpdaterFactory;
     quint8 * data = 0;
     quint8 size = 0;
+    ViewMode state = ClockModel::getInstance().getCurrentState();
+    IUpdater * updater = 0;
 
-    if (nstate == ANALOG)
-        DecUpdater * updater = factory->createDec();
+    if (state == ANALOG)
+    {
+        updater = factory->createDec();
+        size = dynamic_cast<DecUpdater *>(updater)->initData(data);
+    }
     else
-        BCDUpdater * updater = factory->createBCD();
-
-    size = updater->initData(data);
+    {
+        updater = factory->createBCD();
+        size = dynamic_cast<BCDUpdater *>(updater)->initData(data);
+    }
 
     delete updater;
     delete factory;
@@ -51,8 +57,8 @@ void ClockController::registerView(ClockView * view)
 {
     if (view)
     {
-        if (_cView)
-            QApplication::disconnect(_cView, SLOT(updateState(quint8*,quint8)));
+//        if (_cView)
+//            QApplication::disconnect(_cView, SLOT(updateState(quint8*,quint8)));
 
         _cView = view;
         QApplication::connect(this, SIGNAL(supplyNewData(quint8*,quint8)),

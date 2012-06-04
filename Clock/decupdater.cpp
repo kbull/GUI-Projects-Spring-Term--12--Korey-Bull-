@@ -13,11 +13,11 @@ DecUpdater::~DecUpdater()
 }
 
 
-quint8 DecUpdater::updateView(quint8 *& data)
+quint8 DecUpdater::initData(quint8 *& data)
 {
     quint8 size = 0;
 
-    if (!view)
+    if (data)
     {
         data = new quint8[size = 3];
 
